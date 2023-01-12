@@ -20,7 +20,7 @@ exports.getAll=(async(req, res) => {
 
 // Update
 exports.update=(async (req, res) => {
-  categories.findByIdAndUpdate(req.body.id, req.body, (err, doc) => {
+  categories.findByIdAndUpdate(req.params.id, req.body, (err, doc) => {
     ResponseService.generalPayloadResponse(err, doc, res, "Category updated successfully");
   });
 });

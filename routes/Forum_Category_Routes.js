@@ -2,7 +2,7 @@ const app = require('express');
 const router = app.Router();
 
 // Forum controller
-const categoryController = require('../controller/Forum_Category_Controller');
+const categoryController = require('../controllers/Forum_Category_Controller');
 
 // Create
 router.post("/", async (req, res) =>categoryController.create(req, res));
