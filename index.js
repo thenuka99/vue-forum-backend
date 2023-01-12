@@ -12,12 +12,19 @@ const app = express();
 const connectDB = require('./config/db');
 connectDB();
 
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+//configure body-parser ends here
+app.use(morgan("dev")); // configire morgan
+
 //middleware
 app.use(express.json());
 app.use(cors());
 
 //routes
-// app.use('/api/', require('./routes/'));
+app.use('/auth', require('./routes/Auth_Routes'));
 
 //set port
 const PORT = process.env.PORT
