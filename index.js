@@ -25,6 +25,7 @@ app.use(cors());
 
 //routes
 app.use('/auth', require('./routes/Auth_Routes'));
+app.use('/categories', require('./routes/Forum_Category_Routes'));
 
 //set port
 const PORT = process.env.PORT

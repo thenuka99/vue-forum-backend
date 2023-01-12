@@ -4,7 +4,6 @@ const Schema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please provide a name to the category"],
-        unique: true,
     },
     addedBy: {
         type: mongoose.Schema.Types.ObjectId,
