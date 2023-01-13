@@ -11,6 +11,6 @@ router.post('/signup', authController.signUp);
 router.post('/login', authController.login);
 
 // get User Details
-router.get('/details', authController.getUserDetails);
+router.post('/details', authController.getUserDetails);
 
 module.exports = router;

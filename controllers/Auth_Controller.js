@@ -34,9 +34,9 @@ exports.login = async function (req, res) {
   }
   if (await bcrypt.compare(password, user.password)) {
     const token = jwt.sign({ email: user.email }, JWT_SECRET, {
-      expiresIn: 10,
+      expiresIn: 1000,
     });
-    if (res.status(201)) {
+    if (res.status(200)) {
       return res.json({ status: "ok", data: token });
     } else {
       return res.json({ error: "error" });
@@ -67,5 +67,5 @@ exports.getUserDetails = async (req, res) => {
       .catch((error) => {
         res.send({ status: "error", data: error });
       });
-  } catch (error) { }
+  } catch (error) {}
 }
