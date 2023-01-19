@@ -1,37 +1,40 @@
 const app = require('express');
 const router = app.Router();
 
+// Auth middleware
+const CheckAuth = require('../middleware/AuthMiddleware')
+
 // Forum controller
 const postController = require('../controllers/Forum_Post_Controller');
 
 // Create
-router.post("/", async (req, res) =>postController.create(req, res));
+router.post("/",CheckAuth, async (req, res) =>postController.create(req, res));
 
 // Update
-router.put("/:id", async (req, res) => postController.update(req, res));
+router.put("/:id",CheckAuth, async (req, res) => postController.update(req, res));
 
 // Delete
-router.delete("/", async (req, res) =>postController.delete(req, res));
+router.delete("/",CheckAuth, async (req, res) =>postController.delete(req, res));
 
 // Get by id
-router.get("/:id", async (req, res) => postController.getById(req, res));
+router.get("/:id",CheckAuth, async (req, res) => postController.getById(req, res));
 
 // Get all
-router.get("/", async (req, res) => postController.getAll(req, res));
+router.get("/",CheckAuth, async (req, res) => postController.getAll(req, res));
 
 // Get all posts of user
-router.get('/user/:userId', postController.getAllPostsOfUser);
+router.get('/user/:userId',CheckAuth, postController.getAllPostsOfUser);
 
 // Get all posts of category
-router.get('/category/:categoryId', postController.getAllPostsOfCategory);
+router.get('/category/:categoryId',CheckAuth, postController.getAllPostsOfCategory);
 
 // search post by title
-router.get('/searchTerm/:searchTerm', postController.searchAllPosts);
+router.get('/searchTerm/:searchTerm',CheckAuth, postController.searchAllPosts);
 
 // Add vote
-router.put('/like', (req, res) => postController.addVote(req, res));
+router.put('/like',CheckAuth, (req, res) => postController.addVote(req, res));
 
 // remove vote
-router.put('/unlike', (req, res) => postController.removeVote(req, res));
+router.put('/unlike',CheckAuth, (req, res) => postController.removeVote(req, res));
 
 module.exports = router;
