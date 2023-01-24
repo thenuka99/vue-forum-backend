@@ -25,6 +25,16 @@ const Schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }],
+    comments: [{
+        addedOn: Date,
+        addedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        content: {
+            type: String,
+        }
+    }],
     updatedOn: {
         type: Date,
     },

@@ -19,6 +19,10 @@ const Schema = new mongoose.Schema({
     updatedOn: {
         type: Date,
     },
+    postCount:{
+        type: Number,
+        default: 0
+    }
 });
 
 module.exports = mongoose.model('Forum_Category', Schema);

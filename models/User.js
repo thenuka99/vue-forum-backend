@@ -19,6 +19,14 @@ const Schema = new mongoose.Schema({
     password: {
         type: String,
     },
+    questions: {
+        type: Number,
+        default: 0
+    },
+    answers: {
+        type: Number,
+        default: 0
+    },
 });
 
 
