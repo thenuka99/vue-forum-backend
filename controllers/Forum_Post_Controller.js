@@ -45,8 +45,8 @@ exports.getAllPostsOfUser = async function (req, res) {
   const userId = req.params.userId;
 
   // Pagination parameters
-  const limit = req.query.limit ? parseInt(req.query.limit) : 10;
-  const page = req.query.page ? parseInt(req.query.page) : 0;
+  const limit = req.body.limit ? parseInt(req.body.limit) : 10;
+  const page = req.body.page ? parseInt(req.body.page) : 0;
 
   const totalPages = Math.ceil(await posts.countDocuments({ addedBy: userId }) / limit);
 
@@ -66,11 +66,11 @@ exports.getAllPostsOfUser = async function (req, res) {
 
 // Get all posts of category.
 exports.getAllPostsOfCategory = async function (req, res) {
-  const categoryId = req.params.categoryId;
+  const categoryId = req.body.categoryId;
 
   // Pagination parameters
-  const limit = req.query.limit ? parseInt(req.query.limit) : 10;
-  const page = req.query.page ? parseInt(req.query.page) : 0;
+  const limit = req.body.limit ? parseInt(req.body.limit) : 10;
+  const page = req.body.page ? parseInt(req.body.page) : 0;
 
 
   const totalPages = Math.ceil(await posts.countDocuments({ categoryis: categoryId }) / limit);
@@ -91,8 +91,8 @@ exports.getAllPostsOfCategory = async function (req, res) {
 
 // search post by title
 exports.searchAllPosts = async function (req, res) {
-  const limit = req.query.limit ? parseInt(req.query.limit) : 5;
-  const page = req.query.page ? parseInt(req.query.page) : 0;
+  const limit = req.body.limit ? parseInt(req.query.limit) : 5;
+  const page = req.body.page ? parseInt(req.query.page) : 0;
 
   const searchTerm = req.params.searchTerm;
   const result = posts.find({ title: { $regex: searchTerm, $options: 'i' } }, (err, doc) => {
