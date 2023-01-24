@@ -37,4 +37,13 @@ router.put('/like',CheckAuth, (req, res) => postController.addVote(req, res));
 // remove vote
 router.put('/unlike',CheckAuth, (req, res) => postController.removeVote(req, res));
 
+// Add comment
+router.put('/comment', (req, res) => postController.addComment(req, res));
+
+// Remove comment
+router.put('/comment/remove', (req, res) => postController.removecomment(req, res));
+
+// Update comment
+router.patch('/comment', (req, res) => postController.updatecomment(req, res));
+
 module.exports = router;

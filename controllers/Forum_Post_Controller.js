@@ -15,7 +15,7 @@ exports.create=( async (req, res) => {
 exports.getAll=(async(req, res) => {
   posts.find((err, doc) => {
     ResponseService.generalPayloadResponse(err, doc, res);
-  });
+  }).populate('addedBy', 'name email').populate('categoryis', 'name')
 });
 
 // Update
@@ -59,6 +59,7 @@ exports.getAllPostsOfUser = async function (req, res) {
   })
       .sort({ addedOn: -1 })
       .populate('addedBy', 'name email')
+      .populate('categoryis','name')
       .skip(page * limit).limit(limit);
 
 }
@@ -87,26 +88,6 @@ exports.getAllPostsOfCategory = async function (req, res) {
 
 }
 
-exports.getPostById = function (req, res) {
-  posts.findById(req.params.id, (err, doc) => {
-      ResponseService.generalPayloadResponse(err, doc, res);
-  })
-      .populate('addedBy', 'name email')
-}
-exports.getOneById = function (req, res) {
-  const limit = req.query.limit ? parseInt(req.query.limit) : 10;
-
-  posts.findById(req.params.id, (err, doc) => {
-      ResponseService.generalPayloadResponse(err, doc, res);
-  })
-      .populate('addedBy', 'name email')
-      .populate({
-          path: 'comments',
-          select: 'content addedOn addedBy',
-          perDocumentLimit: limit,
-          populate: [{ path: 'addedBy', select: 'name email' }]
-      });
-}
 
 // search post by title
 exports.searchAllPosts = async function (req, res) {
@@ -131,4 +112,37 @@ exports.removeVote = async function (req, res) {
   posts.findByIdAndUpdate(req.body.postId, { $pull: { votes: req.body.addedBy } }, { new: true }, (err, doc) => {
       ResponseService.generalResponse(err, res, "vote removed successfully");
   });
+}
+
+
+// add comment to post.
+exports.addComment = async function (req, res) {
+  const comment = {
+      content: req.body.content,
+      addedBy: req.body.addedBy,
+      addedOn: req.body.addedOn,
+  };
+
+  Forum_Post.findByIdAndUpdate(req.body.postId, { $push: { comments: comment } }, { new: true }, (err, doc) => {
+      ResponseService.generalResponse(err, res, "comment added successfully");
+  });
+}
+
+
+// remove comment from post.
+exports.removecomment = async function (req, res) {
+  Forum_Post.findByIdAndUpdate(req.body.postId, { $pull: { "comments": { _id: req.body.commentId } } }, { new: true }, (err, doc) => {
+      ResponseService.generalResponse(err, res, "vote removed successfully");
+  });
+}
+
+// update comment.//to do not working
+exports.updatecomment = async function (req, res) {
+  console.log(req.body)
+  Forum_Post.update(
+      { 'comments._id': req.body.commentId },
+      { $set: { 'comments.$.content': req.body.content } },
+      { new: true }, (err, doc) => {
+          ResponseService.generalResponse(err, res, "vote updated successfully");
+      });
 }
