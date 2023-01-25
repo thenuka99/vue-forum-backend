@@ -15,7 +15,7 @@ exports.create=( async (req, res) => {
 exports.getAll=(async(req, res) => {
   posts.find((err, doc) => {
     ResponseService.generalPayloadResponse(err, doc, res);
-  }).populate('addedBy', 'name email').populate('categoryis', 'name')
+  }).populate('addedBy', 'name email imageurl').populate('categoryis', 'name')
 });
 
 // Update
@@ -29,7 +29,7 @@ exports.update=(async (req, res) => {
 exports.getById=(async (req, res) => {
   posts.findById(req.params.id, (err, doc) => {
     ResponseService.generalPayloadResponse(err, doc, res);
-  }).populate('addedBy', 'name email').populate('categoryis', 'name')
+  }).populate('addedBy', 'name email imageurl').populate('categoryis', 'name')
 });
 
 // Delete
@@ -58,7 +58,7 @@ exports.getAllPostsOfUser = async function (req, res) {
       ResponseService.generalPayloadResponse(err, newPayload, res);
   })
       .sort({ addedOn: -1 })
-      .populate('addedBy', 'name email')
+      .populate('addedBy', 'name email imageurl')
       .populate('categoryis','name')
       .skip(page * limit).limit(limit);
 
@@ -83,7 +83,7 @@ exports.getAllPostsOfCategory = async function (req, res) {
       ResponseService.generalPayloadResponse(err, newPayload, res);
   })
       .sort({ addedOn: -1 })
-      .populate('addedBy', 'name email')
+      .populate('addedBy', 'name email imageurl')
       .skip(page * limit).limit(limit);
 
 }
