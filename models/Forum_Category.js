@@ -9,20 +9,14 @@ const Schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    addedOn: {
-        type: Date,
-    },
     updatedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    },
-    updatedOn: {
-        type: Date,
     },
     postCount:{
         type: Number,
         default: 0
     }
-});
+},{ timestamps: true });
 
 module.exports = mongoose.model('Forum_Category', Schema);
