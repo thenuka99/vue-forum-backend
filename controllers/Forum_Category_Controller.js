@@ -15,7 +15,9 @@ exports.create=( async (req, res) => {
 exports.getAll=(async(req, res) => {
   categories.find((err, doc) => {
     ResponseService.generalPayloadResponse(err, doc, res);
-  });
+  })
+  .populate('addedBy', 'name email imageurl')
+  .populate('updatedBy', 'name email imageurl')
 });
 
 // Update

@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Signup
 exports.signUp = async function (req, res) {
-  const { fname, lname, email, password } = req.body;
+  const { name, email, password } = req.body;
 
   const encryptedPassword = await bcrypt.hash(password, 10);
 
@@ -17,7 +17,7 @@ exports.signUp = async function (req, res) {
     return res.json({ error: "User Exists" });
   }
 
-  let user = { fname, lname, email, password: encryptedPassword, }
+  let user = { name, email, password: encryptedPassword, }
 
   new User(user).save((err, doc) => {
     ResponseService.generalPayloadResponse(err, doc, res);
