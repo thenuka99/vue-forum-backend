@@ -6,9 +6,6 @@ const Schema = new mongoose.Schema({
         index: true,
         required: [true, "Please provide a tite to the Question"],
     },
-    addedOn: {
-        type: Date,
-    },
     addedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -35,13 +32,6 @@ const Schema = new mongoose.Schema({
             type: String,
         }
     }],
-    updatedOn: {
-        type: Date,
-    },
-    status: {
-        type: Number,
-        default: 1
-    },
-});
+},{ timestamps: true });
 
 module.exports = mongoose.model('Forum_Post', Schema);

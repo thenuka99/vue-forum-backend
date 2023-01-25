@@ -12,6 +12,7 @@ const Schema = new mongoose.Schema({
     },
     imageurl: {
         type: String,
+        default:'https://toppng.com/uploads/preview/user-account-management-logo-user-icon-11562867145a56rus2zwu.png'
     },
     email: {
         type: String,
@@ -27,7 +28,11 @@ const Schema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-});
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+},{ timestamps: true });
 
 
 module.exports = mongoose.model('User', Schema);
