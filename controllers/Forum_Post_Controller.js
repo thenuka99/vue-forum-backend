@@ -13,9 +13,23 @@ exports.create=( async (req, res) => {
 
 //get all
 exports.getAll=(async(req, res) => {
+  
+  // Pagination parameters
+  const limit = req.query.limit ? parseInt(req.query.limit) : 1;
+  const page = req.query.page ? parseInt(req.query.page)-1 : 0;
+
+  const totalPages = Math.ceil(await posts.countDocuments() / limit);
   posts.find((err, doc) => {
-    ResponseService.generalPayloadResponse(err, doc, res);
-  }).populate('addedBy', 'name email imageurl').populate('categoryis', 'name')
+    const newPayload = {
+      docs: doc,
+      totalPages: totalPages
+  }
+  ResponseService.generalPayloadResponse(err, newPayload, res);
+})
+  .sort({ addedOn: -1 })
+  .populate('addedBy', 'name email imageurl')
+  .skip(page * limit)
+  .limit(limit);
 });
 
 // Update
@@ -45,8 +59,8 @@ exports.getAllPostsOfUser = async function (req, res) {
   const userId = req.params.userId;
 
   // Pagination parameters
-  const limit = req.body.limit ? parseInt(req.body.limit) : 10;
-  const page = req.body.page ? parseInt(req.body.page) : 0;
+  const limit = req.body.limit ? parseInt(req.body.limit) : 1;
+  const page = req.query.page ? parseInt(req.query.page)-1 : 0;
 
   const totalPages = Math.ceil(await posts.countDocuments({ addedBy: userId }) / limit);
 
@@ -60,7 +74,8 @@ exports.getAllPostsOfUser = async function (req, res) {
       .sort({ addedOn: -1 })
       .populate('addedBy', 'name email imageurl')
       .populate('categoryis','name')
-      .skip(page * limit).limit(limit);
+      .skip(page * limit)
+      .limit(limit);
 
 }
 
@@ -69,8 +84,8 @@ exports.getAllPostsOfCategory = async function (req, res) {
   const categoryId = req.params.categoryId;
 
   // Pagination parameters
-  const limit = req.body.limit ? parseInt(req.body.limit) : 10;
-  const page = req.body.page ? parseInt(req.body.page) : 0;
+  const limit = req.body.limit ? parseInt(req.body.limit) : 1;
+  const page = req.query.page ? parseInt(req.query.page) -1 : 0;
 
 
   const totalPages = Math.ceil(await posts.countDocuments({ categoryis: categoryId }) / limit);
@@ -84,7 +99,8 @@ exports.getAllPostsOfCategory = async function (req, res) {
   })
       .sort({ addedOn: -1 })
       .populate('addedBy', 'name email imageurl')
-      .skip(page * limit).limit(limit);
+      .skip(page * limit)
+      .limit(limit);
 
 }
 
