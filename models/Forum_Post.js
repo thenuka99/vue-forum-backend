@@ -23,7 +23,6 @@ const Schema = new mongoose.Schema({
         ref: 'User'
     }],
     comments: [{
-        addedOn: Date,
         addedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
@@ -31,7 +30,7 @@ const Schema = new mongoose.Schema({
         content: {
             type: String,
         }
-    }],
+    },{ timestamps: true }],
 },{ timestamps: true });
 
 module.exports = mongoose.model('Forum_Post', Schema);

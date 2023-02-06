@@ -15,9 +15,9 @@ exports.create=( async (req, res) => {
 exports.getAll=(async(req, res) => {
   
   // Pagination parameters
-  const limit = req.query.limit ? parseInt(req.query.limit) : 1;
+  const limit = req.query.limit ? parseInt(req.query.limit) : 10;
   const page = req.query.page ? parseInt(req.query.page)-1 : 0;
-
+console.log(page)
   const totalPages = Math.ceil(await posts.countDocuments() / limit);
   posts.find((err, doc) => {
     const newPayload = {
@@ -26,7 +26,7 @@ exports.getAll=(async(req, res) => {
   }
   ResponseService.generalPayloadResponse(err, newPayload, res);
 })
-  .sort({ addedOn: -1 })
+  .sort({ createdAt: -1 })
   .populate('addedBy', 'name email imageurl')
   .skip(page * limit)
   .limit(limit);
