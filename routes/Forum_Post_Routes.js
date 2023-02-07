@@ -14,7 +14,7 @@ router.post("/",CheckAuth, async (req, res) =>postController.create(req, res));
 router.put("/:id",CheckAuth, async (req, res) => postController.update(req, res));
 
 // Delete
-router.delete("/",CheckAuth, async (req, res) =>postController.delete(req, res));
+router.delete("/:id",CheckAuth, async (req, res) =>postController.delete(req, res));
 
 // Get by id
 router.get("/:id",CheckAuth, async (req, res) => postController.getById(req, res));

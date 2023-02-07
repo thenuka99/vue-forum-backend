@@ -47,6 +47,7 @@ exports.login = async function (req, res) {
 
 exports.getUserDetails = async (req, res) => {
   const { token } = req.body;
+  console.log(token);
   try {
     const user = jwt.verify(token, JWT_SECRET, (err, res) => {
       if (err) {

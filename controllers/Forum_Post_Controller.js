@@ -59,7 +59,7 @@ exports.getAllPostsOfUser = async function (req, res) {
   const userId = req.params.userId;
 
   // Pagination parameters
-  const limit = req.body.limit ? parseInt(req.body.limit) : 1;
+  const limit = req.body.limit ? parseInt(req.body.limit) : 10;
   const page = req.query.page ? parseInt(req.query.page)-1 : 0;
 
   const totalPages = Math.ceil(await posts.countDocuments({ addedBy: userId }) / limit);
@@ -84,7 +84,7 @@ exports.getAllPostsOfCategory = async function (req, res) {
   const categoryId = req.params.categoryId;
 
   // Pagination parameters
-  const limit = req.body.limit ? parseInt(req.body.limit) : 1;
+  const limit = req.body.limit ? parseInt(req.body.limit) : 10;
   const page = req.query.page ? parseInt(req.query.page) -1 : 0;
 
 
