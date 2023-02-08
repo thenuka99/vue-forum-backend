@@ -32,10 +32,10 @@ router.get('/category/:categoryId',CheckAuth, postController.getAllPostsOfCatego
 router.get('/searchTerm/:searchTerm',CheckAuth, postController.searchAllPosts);
 
 // Add vote
-router.put('/like',CheckAuth, (req, res) => postController.addVote(req, res));
+router.patch('/like',CheckAuth, (req, res) => postController.addVote(req, res));
 
 // remove vote
-router.put('/unlike',CheckAuth, (req, res) => postController.removeVote(req, res));
+router.patch('/unlike',CheckAuth, (req, res) => postController.removeVote(req, res));
 
 // Add comment
 router.patch('/comment',CheckAuth, (req, res) => postController.addComment(req, res));
