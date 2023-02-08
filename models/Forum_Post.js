@@ -23,14 +23,19 @@ const Schema = new mongoose.Schema({
         ref: 'User'
     }],
     comments: [{
-        addedBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        },
-        content: {
-            type: String,
-        }
-    },{ timestamps: true }],
+        type: new mongoose.Schema(
+            {
+                addedBy: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User'
+                },
+                content: {
+                    type: String,
+                }
+            },
+            { timestamps: true }
+          )
+    }],
 },{ timestamps: true });
 
 module.exports = mongoose.model('Forum_Post', Schema);

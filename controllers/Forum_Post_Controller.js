@@ -43,7 +43,7 @@ exports.update=(async (req, res) => {
 exports.getById=(async (req, res) => {
   posts.findById(req.params.id, (err, doc) => {
     ResponseService.generalPayloadResponse(err, doc, res);
-  }).populate('addedBy', 'name email imageurl').populate('categoryis', 'name')
+  }).populate('addedBy', 'name email imageurl').populate('categoryis', 'name').populate('comments.addedBy', 'name email imageurl')
 });
 
 // Delete
@@ -130,24 +130,21 @@ exports.removeVote = async function (req, res) {
   });
 }
 
-
 // add comment to post.
-exports.addComment = async function (req, res) {
+exports.addComment = (async (req, res) => {
   const comment = {
       content: req.body.content,
       addedBy: req.body.addedBy,
-      addedOn: req.body.addedOn,
   };
-
-  Forum_Post.findByIdAndUpdate(req.body.postId, { $push: { comments: comment } }, { new: true }, (err, doc) => {
+  posts.findByIdAndUpdate(req.body.postId, { $push: { comments: comment } }, { new: true }, (err, doc) => {
       ResponseService.generalResponse(err, res, "comment added successfully");
   });
-}
+});
 
 
 // remove comment from post.
 exports.removecomment = async function (req, res) {
-  Forum_Post.findByIdAndUpdate(req.body.postId, { $pull: { "comments": { _id: req.body.commentId } } }, { new: true }, (err, doc) => {
+  posts.findByIdAndUpdate(req.body.postId, { $pull: { "comments": { _id: req.body.commentId } } }, { new: true }, (err, doc) => {
       ResponseService.generalResponse(err, res, "vote removed successfully");
   });
 }
@@ -155,7 +152,7 @@ exports.removecomment = async function (req, res) {
 // update comment.//to do not working
 exports.updatecomment = async function (req, res) {
   console.log(req.body)
-  Forum_Post.update(
+  posts.update(
       { 'comments._id': req.body.commentId },
       { $set: { 'comments.$.content': req.body.content } },
       { new: true }, (err, doc) => {
