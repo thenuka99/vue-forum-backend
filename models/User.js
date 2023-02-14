@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const Schema = new mongoose.Schema({
     name: {
-        type: String,
+        type: String,        
+        required: [true, "name cannot be empty"],
     },
     bio: {
         type: String,
@@ -15,7 +16,9 @@ const Schema = new mongoose.Schema({
         default:'https://toppng.com/uploads/preview/user-account-management-logo-user-icon-11562867145a56rus2zwu.png'
     },
     email: {
-        type: String,
+        type: String,        
+        required: [true, "email cannot be empty"],
+        unique: [true, "user already exists"],
     },
     password: {
         type: String,

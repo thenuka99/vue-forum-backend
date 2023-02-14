@@ -12,7 +12,8 @@ const Schema = new mongoose.Schema({
     },
     categoryis: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Forum_Category'
+        ref: 'Forum_Category',        
+        required: [true, "Please provide a category to the Question"],
     },
     content: {
         type: String,

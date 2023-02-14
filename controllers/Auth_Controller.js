@@ -14,14 +14,18 @@ exports.signUp = async function (req, res) {
 
   const oldUser = await User.findOne({ email });
   if (oldUser) {
-    return res.json({ error: "User Exists" });
-  }
+    res.status(400).json({
+      status: 400,
+      msg: message || err.message || "user already exists",
+      error: err
+  })
+  }else{
+    let user = { name, email, password: encryptedPassword, }
 
-  let user = { name, email, password: encryptedPassword, }
-
-  new User(user).save((err, doc) => {
-    ResponseService.generalPayloadResponse(err, doc, res);
-  });
+    new User(user).save((err, doc) => {
+      ResponseService.generalPayloadResponse(err, doc, res);
+    });
+  }  
 }
 
 // Login
