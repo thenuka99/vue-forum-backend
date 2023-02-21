@@ -14,11 +14,7 @@ exports.signUp = async function (req, res) {
 
   const oldUser = await User.findOne({ email });
   if (oldUser) {
-    res.status(400).json({
-      status: 400,
-      msg: message || err.message || "user already exists",
-      error: err
-  })
+    return res.json({status: 404, msg: "user already exists" });
   }else{
     let user = { name, email, password: encryptedPassword, }
 
@@ -34,19 +30,19 @@ exports.login = async function (req, res) {
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.json({ error: "User Not found" });
+    return res.json({status: 404, msg: "User Not found" });
   }
   if (await bcrypt.compare(password, user.password)) {
     const token = jwt.sign({ email: user.email }, JWT_SECRET, {
       expiresIn: 86400,
     });
     if (res.status(200)) {
-      return res.json({ status: "ok", data: token });
+      return res.json({  status: 200, data: token });
     } else {
-      return res.json({ error: "error" });
+      return res.json({  status: 400, msg: "error" });
     }
   }
-  res.json({ status: "error", error: "Invalid Password" });
+  return res.json({ status: 400, msg: "Invalid Password" });
 }
 
 exports.getUserDetails = async (req, res) => {
