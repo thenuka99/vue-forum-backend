@@ -5,49 +5,49 @@ const posts = require('../models/Forum_Post')
 const ResponseService = require("../utils/RresponseService"); // Response service
 
 // Create
-exports.create=( async (req, res) => {
+exports.create = (async (req, res) => {
   new posts(req.body).save((err, doc) => {
-    ResponseService.generalPayloadResponse(err, doc, res,"Post created successfully");
+    ResponseService.generalPayloadResponse(err, doc, res, "Post created successfully");
   });
 });
 
 //get all
-exports.getAll=(async(req, res) => {
-  
+exports.getAll = (async (req, res) => {
+
   // Pagination parameters
   const limit = req.query.limit ? parseInt(req.query.limit) : 10;
-  const page = req.query.page ? parseInt(req.query.page)-1 : 0;
-console.log(page)
+  const page = req.query.page ? parseInt(req.query.page) - 1 : 0;
+  console.log(page)
   const totalPages = Math.ceil(await posts.countDocuments() / limit);
   posts.find((err, doc) => {
     const newPayload = {
       docs: doc,
       totalPages: totalPages
-  }
-  ResponseService.generalPayloadResponse(err, newPayload, res);
-})
-  .sort({ createdAt: -1 })
-  .populate('addedBy', 'name email imageurl')
-  .skip(page * limit)
-  .limit(limit);
+    }
+    ResponseService.generalPayloadResponse(err, newPayload, res);
+  })
+    .sort({ createdAt: -1 })
+    .populate('addedBy', 'name email imageurl')
+    .skip(page * limit)
+    .limit(limit);
 });
 
 // Update
-exports.update=(async (req, res) => {
+exports.update = (async (req, res) => {
   posts.findByIdAndUpdate(req.params.id, req.body, (err, doc) => {
     ResponseService.generalPayloadResponse(err, doc, res, "Post updated successfully");
   });
 });
 
 // Get by id
-exports.getById=(async (req, res) => {
+exports.getById = (async (req, res) => {
   posts.findById(req.params.id, (err, doc) => {
     ResponseService.generalPayloadResponse(err, doc, res);
   }).populate('addedBy', 'name email imageurl').populate('categoryis', 'name').populate('comments.addedBy', 'name email imageurl')
 });
 
 // Delete
-exports.delete=(async(req, res) => {
+exports.delete = (async (req, res) => {
   posts.findByIdAndRemove(req.params.id, (err, doc) => {
     ResponseService.generalResponse(err, res, "Post removed successfully");
   });
@@ -60,22 +60,22 @@ exports.getAllPostsOfUser = async function (req, res) {
 
   // Pagination parameters
   const limit = req.body.limit ? parseInt(req.body.limit) : 10;
-  const page = req.query.page ? parseInt(req.query.page)-1 : 0;
+  const page = req.query.page ? parseInt(req.query.page) - 1 : 0;
 
   const totalPages = Math.ceil(await posts.countDocuments({ addedBy: userId }) / limit);
 
   posts.find({ addedBy: userId }, (err, doc) => {
-      const newPayload = {
-          docs: doc,
-          totalPages: totalPages
-      }
-      ResponseService.generalPayloadResponse(err, newPayload, res);
+    const newPayload = {
+      docs: doc,
+      totalPages: totalPages
+    }
+    ResponseService.generalPayloadResponse(err, newPayload, res);
   })
-      .sort({ addedOn: -1 })
-      .populate('addedBy', 'name email imageurl')
-      .populate('categoryis','name')
-      .skip(page * limit)
-      .limit(limit);
+    .sort({ addedOn: -1 })
+    .populate('addedBy', 'name email imageurl')
+    .populate('categoryis', 'name')
+    .skip(page * limit)
+    .limit(limit);
 
 }
 
@@ -85,59 +85,63 @@ exports.getAllPostsOfCategory = async function (req, res) {
 
   // Pagination parameters
   const limit = req.body.limit ? parseInt(req.body.limit) : 10;
-  const page = req.query.page ? parseInt(req.query.page) -1 : 0;
+  const page = req.query.page ? parseInt(req.query.page) - 1 : 0;
 
 
   const totalPages = Math.ceil(await posts.countDocuments({ categoryis: categoryId }) / limit);
 
   const result = posts.find({ categoryis: categoryId }, (err, doc) => {
-      const newPayload = {
-          docs: doc,
-          totalPages: totalPages
-      }
-      ResponseService.generalPayloadResponse(err, newPayload, res);
+    const newPayload = {
+      docs: doc,
+      totalPages: totalPages
+    }
+    ResponseService.generalPayloadResponse(err, newPayload, res);
   })
-      .sort({ addedOn: -1 })
-      .populate('addedBy', 'name email imageurl')
-      .skip(page * limit)
-      .limit(limit);
+    .sort({ addedOn: -1 })
+    .populate('addedBy', 'name email imageurl')
+    .skip(page * limit)
+    .limit(limit);
 
 }
 
 
 // search post by title
 exports.searchAllPosts = async function (req, res) {
-  const limit = req.body.limit ? parseInt(req.query.limit) : 5;
-  const page = req.body.page ? parseInt(req.query.page) : 0;
+  const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+  const page = req.query.page ? parseInt(req.query.page) : 0;
 
   const searchTerm = req.params.searchTerm;
   const result = posts.find({ title: { $regex: searchTerm, $options: 'i' } }, (err, doc) => {
-      ResponseService.generalPayloadResponse(err, doc, res);
-  });
+    ResponseService.generalPayloadResponse(err, doc, res);
+  })
+    .sort({ addedOn: -1 })
+    .populate('addedBy', 'name email imageurl')
+    .skip(page * limit)
+    .limit(limit);
 }
 
 // add vote to post.
 exports.addVote = async function (req, res) {
   posts.findByIdAndUpdate(req.body.postId, { $push: { votes: req.body.addedBy } }, { new: true }, (err, doc) => {
-      ResponseService.generalResponse(err, res, "vote added successfully");
+    ResponseService.generalResponse(err, res, "vote added successfully");
   });
 }
 
 // remove vote from post.
 exports.removeVote = async function (req, res) {
   posts.findByIdAndUpdate(req.body.postId, { $pull: { votes: req.body.addedBy } }, { new: true }, (err, doc) => {
-      ResponseService.generalResponse(err, res, "vote removed successfully");
+    ResponseService.generalResponse(err, res, "vote removed successfully");
   });
 }
 
 // add comment to post.
 exports.addComment = (async (req, res) => {
   const comment = {
-      content: req.body.content,
-      addedBy: req.body.addedBy,
+    content: req.body.content,
+    addedBy: req.body.addedBy,
   };
   posts.findByIdAndUpdate(req.body.postId, { $push: { comments: comment } }, { new: true }, (err, doc) => {
-      ResponseService.generalResponse(err, res, "comment added successfully");
+    ResponseService.generalResponse(err, res, "comment added successfully");
   });
 });
 
@@ -145,7 +149,7 @@ exports.addComment = (async (req, res) => {
 // remove comment from post.
 exports.removecomment = async function (req, res) {
   posts.findByIdAndUpdate(req.body.postId, { $pull: { "comments": { _id: req.body.commentId } } }, { new: true }, (err, doc) => {
-      ResponseService.generalResponse(err, res, "vote removed successfully");
+    ResponseService.generalResponse(err, res, "vote removed successfully");
   });
 }
 
@@ -153,9 +157,9 @@ exports.removecomment = async function (req, res) {
 exports.updatecomment = async function (req, res) {
   console.log(req.body)
   posts.update(
-      { 'comments._id': req.body.commentId },
-      { $set: { 'comments.$.content': req.body.content } },
-      { new: true }, (err, doc) => {
-          ResponseService.generalResponse(err, res, "vote updated successfully");
-      });
+    { 'comments._id': req.body.commentId },
+    { $set: { 'comments.$.content': req.body.content } },
+    { new: true }, (err, doc) => {
+      ResponseService.generalResponse(err, res, "vote updated successfully");
+    });
 }
